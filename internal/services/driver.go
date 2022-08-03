@@ -16,7 +16,7 @@ func (s *Server) CreateDriver(context context.Context, req *pb.CreateDriverReque
 	if err != sql.ErrNoRows {
 		return &pb.CreateDriverResponse{
 			Status: http.StatusBadRequest,
-			Error:  "user already exists",
+			Error:  "driver already exists",
 		}, nil
 	}
 
@@ -32,7 +32,7 @@ func (s *Server) CreateDriver(context context.Context, req *pb.CreateDriverReque
 	if err != nil {
 		return &pb.CreateDriverResponse{
 			Status: http.StatusInternalServerError,
-			Error:  fmt.Sprintf("create driver error: %s", err),
+			Error:  fmt.Sprintf("svc: create driver error: %s", err),
 		}, nil
 	}
 
