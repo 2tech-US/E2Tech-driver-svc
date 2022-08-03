@@ -13,11 +13,6 @@ service DriverService {
   rpc VerifyDriver(VerifyDriverRequest) returns (VerifyDriverResponse) {}
   rpc DeleteDriver(DeleteDriverRequest) returns (DeleteDriverResponse) {}
 
-  rpc CreateAddress(CreateAddressRequest) returns (CreateAddressResponse) {}
-  rpc GetAddress(GetAddressRequest) returns (GetAddressResponse) {}
-  rpc GetLocation(GetLocationRequest) returns (GetLocationResponse) {}
-  rpc UpdateAddress(UpdateAddressRequest) returns (UpdateAddressResponse) {}
-  rpc DeleteAddress(DeleteAddressRequest) returns (DeleteAddressResponse) {}
 }
 
 message Driver {
@@ -106,89 +101,4 @@ message DeleteDriverResponse {
   int64 status = 1;
   string error = 2;
   string message = 3;
-}
-
-// address
-
-message Address {
-  int64 id = 1;
-  int64 driver_id = 2;
-  string details = 3;
-  string house_number = 4;
-  string street = 5;
-  string ward = 6;
-  string district = 7;
-  string city = 8;
-  double latitude = 9;
-  double longitude = 10;
-}
-
-// CreateAddress
-
-message CreateAddressRequest {
-  int64 driver_id = 1;
-  string detail = 2;
-  string house_number = 3;
-  string street = 4;
-  string ward = 5;
-  string district = 6;
-  string city = 7;
-}
-
-message CreateAddressResponse {
-  int64 status = 1;
-  string error = 2;
-  Address address = 3;
-}
-
-// GetAddress
-
-message GetAddressRequest {
-  int64 driver_id = 1;
-}
-
-message GetAddressResponse {
-  int64 status = 1;
-  string error = 2;
-  Address address = 3;
-}
-
-message GetLocationRequest {
-  int64 driver_id = 1;
-}
-
-message Location {
-  double latitude = 1;
-  double longitude = 2;
-}
-
-message GetLocationResponse {
-  int64 status = 1;
-  string error = 2;
-  Location location = 3;
-}
-
-message UpdateAddressRequest {
-  int64 id = 1;
-  string detail = 2;
-  string house_number = 3;
-  string street = 4;
-  string ward = 5;
-  string district = 6;
-  string city = 7;
-}
-
-message UpdateAddressResponse {
-  int64 status = 1;
-  string error = 2;
-  Address address = 3;
-}
-
-message DeleteAddressRequest {
-  int64 id = 1;
-}
-
-message DeleteAddressResponse {
-  int64 status = 1;
-  string error = 2;
 }

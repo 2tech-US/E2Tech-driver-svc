@@ -29,11 +29,6 @@ type DriverServiceClient interface {
 	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error)
 	VerifyDriver(ctx context.Context, in *VerifyDriverRequest, opts ...grpc.CallOption) (*VerifyDriverResponse, error)
 	DeleteDriver(ctx context.Context, in *DeleteDriverRequest, opts ...grpc.CallOption) (*DeleteDriverResponse, error)
-	CreateAddress(ctx context.Context, in *CreateAddressRequest, opts ...grpc.CallOption) (*CreateAddressResponse, error)
-	GetAddress(ctx context.Context, in *GetAddressRequest, opts ...grpc.CallOption) (*GetAddressResponse, error)
-	GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error)
-	UpdateAddress(ctx context.Context, in *UpdateAddressRequest, opts ...grpc.CallOption) (*UpdateAddressResponse, error)
-	DeleteAddress(ctx context.Context, in *DeleteAddressRequest, opts ...grpc.CallOption) (*DeleteAddressResponse, error)
 }
 
 type driverServiceClient struct {
@@ -107,51 +102,6 @@ func (c *driverServiceClient) DeleteDriver(ctx context.Context, in *DeleteDriver
 	return out, nil
 }
 
-func (c *driverServiceClient) CreateAddress(ctx context.Context, in *CreateAddressRequest, opts ...grpc.CallOption) (*CreateAddressResponse, error) {
-	out := new(CreateAddressResponse)
-	err := c.cc.Invoke(ctx, "/driver.DriverService/CreateAddress", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *driverServiceClient) GetAddress(ctx context.Context, in *GetAddressRequest, opts ...grpc.CallOption) (*GetAddressResponse, error) {
-	out := new(GetAddressResponse)
-	err := c.cc.Invoke(ctx, "/driver.DriverService/GetAddress", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *driverServiceClient) GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error) {
-	out := new(GetLocationResponse)
-	err := c.cc.Invoke(ctx, "/driver.DriverService/GetLocation", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *driverServiceClient) UpdateAddress(ctx context.Context, in *UpdateAddressRequest, opts ...grpc.CallOption) (*UpdateAddressResponse, error) {
-	out := new(UpdateAddressResponse)
-	err := c.cc.Invoke(ctx, "/driver.DriverService/UpdateAddress", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *driverServiceClient) DeleteAddress(ctx context.Context, in *DeleteAddressRequest, opts ...grpc.CallOption) (*DeleteAddressResponse, error) {
-	out := new(DeleteAddressResponse)
-	err := c.cc.Invoke(ctx, "/driver.DriverService/DeleteAddress", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // DriverServiceServer is the server API for DriverService service.
 // All implementations must embed UnimplementedDriverServiceServer
 // for forward compatibility
@@ -163,11 +113,6 @@ type DriverServiceServer interface {
 	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
 	VerifyDriver(context.Context, *VerifyDriverRequest) (*VerifyDriverResponse, error)
 	DeleteDriver(context.Context, *DeleteDriverRequest) (*DeleteDriverResponse, error)
-	CreateAddress(context.Context, *CreateAddressRequest) (*CreateAddressResponse, error)
-	GetAddress(context.Context, *GetAddressRequest) (*GetAddressResponse, error)
-	GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error)
-	UpdateAddress(context.Context, *UpdateAddressRequest) (*UpdateAddressResponse, error)
-	DeleteAddress(context.Context, *DeleteAddressRequest) (*DeleteAddressResponse, error)
 	mustEmbedUnimplementedDriverServiceServer()
 }
 
@@ -195,21 +140,6 @@ func (UnimplementedDriverServiceServer) VerifyDriver(context.Context, *VerifyDri
 }
 func (UnimplementedDriverServiceServer) DeleteDriver(context.Context, *DeleteDriverRequest) (*DeleteDriverResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDriver not implemented")
-}
-func (UnimplementedDriverServiceServer) CreateAddress(context.Context, *CreateAddressRequest) (*CreateAddressResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateAddress not implemented")
-}
-func (UnimplementedDriverServiceServer) GetAddress(context.Context, *GetAddressRequest) (*GetAddressResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAddress not implemented")
-}
-func (UnimplementedDriverServiceServer) GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetLocation not implemented")
-}
-func (UnimplementedDriverServiceServer) UpdateAddress(context.Context, *UpdateAddressRequest) (*UpdateAddressResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateAddress not implemented")
-}
-func (UnimplementedDriverServiceServer) DeleteAddress(context.Context, *DeleteAddressRequest) (*DeleteAddressResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteAddress not implemented")
 }
 func (UnimplementedDriverServiceServer) mustEmbedUnimplementedDriverServiceServer() {}
 
@@ -350,96 +280,6 @@ func _DriverService_DeleteDriver_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DriverService_CreateAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAddressRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DriverServiceServer).CreateAddress(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/driver.DriverService/CreateAddress",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DriverServiceServer).CreateAddress(ctx, req.(*CreateAddressRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DriverService_GetAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAddressRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DriverServiceServer).GetAddress(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/driver.DriverService/GetAddress",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DriverServiceServer).GetAddress(ctx, req.(*GetAddressRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DriverService_GetLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetLocationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DriverServiceServer).GetLocation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/driver.DriverService/GetLocation",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DriverServiceServer).GetLocation(ctx, req.(*GetLocationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DriverService_UpdateAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAddressRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DriverServiceServer).UpdateAddress(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/driver.DriverService/UpdateAddress",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DriverServiceServer).UpdateAddress(ctx, req.(*UpdateAddressRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DriverService_DeleteAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAddressRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DriverServiceServer).DeleteAddress(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/driver.DriverService/DeleteAddress",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DriverServiceServer).DeleteAddress(ctx, req.(*DeleteAddressRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // DriverService_ServiceDesc is the grpc.ServiceDesc for DriverService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -474,26 +314,6 @@ var DriverService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteDriver",
 			Handler:    _DriverService_DeleteDriver_Handler,
-		},
-		{
-			MethodName: "CreateAddress",
-			Handler:    _DriverService_CreateAddress_Handler,
-		},
-		{
-			MethodName: "GetAddress",
-			Handler:    _DriverService_GetAddress_Handler,
-		},
-		{
-			MethodName: "GetLocation",
-			Handler:    _DriverService_GetLocation_Handler,
-		},
-		{
-			MethodName: "UpdateAddress",
-			Handler:    _DriverService_UpdateAddress_Handler,
-		},
-		{
-			MethodName: "DeleteAddress",
-			Handler:    _DriverService_DeleteAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,6 +1,6 @@
 module github.com/lntvan166/e2tech-driver-svc
 
-go 1.18
+go 1.19
 
 require (
 	github.com/kelvins/geocoder v0.0.0-20200113010004-f579500e9e27
