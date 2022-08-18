@@ -120,7 +120,7 @@ func (q *Queries) GetDriverForUpdate(ctx context.Context, id int64) (Driver, err
 }
 
 const getDriverNearby = `-- name: GetDriverNearby :many
-SELECT id, latitude, longitude, SQRT(
+SELECT phone, latitude, longitude, SQRT(
     POW(69.1 * (latitude - $2::float8), 2) +
     POW(69.1 * ($3::float8 - longitude) * COS(latitude / 57.3), 2))::float8 AS distance
 FROM driver HAVING distance < 25
@@ -135,7 +135,7 @@ type GetDriverNearbyParams struct {
 }
 
 type GetDriverNearbyRow struct {
-	ID        int64           `json:"id"`
+	Phone     string          `json:"phone"`
 	Latitude  sql.NullFloat64 `json:"latitude"`
 	Longitude sql.NullFloat64 `json:"longitude"`
 	Distance  float64         `json:"distance"`
@@ -151,7 +151,7 @@ func (q *Queries) GetDriverNearby(ctx context.Context, arg GetDriverNearbyParams
 	for rows.Next() {
 		var i GetDriverNearbyRow
 		if err := rows.Scan(
-			&i.ID,
+			&i.Phone,
 			&i.Latitude,
 			&i.Longitude,
 			&i.Distance,

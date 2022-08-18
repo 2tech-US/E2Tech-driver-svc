@@ -28,6 +28,7 @@ func (s *Server) GetDriverNearby(ctx context.Context, req *pb.GetDriverNearbyReq
 	dataRsp := []*pb.DriverNearby{}
 	for _, driver := range drivers {
 		dataRsp = append(dataRsp, &pb.DriverNearby{
+			Phone:     driver.Phone,
 			Distance:  driver.Distance,
 			Latitude:  utils.Float64FromNull(driver.Latitude),
 			Longitude: utils.Float64FromNull(driver.Longitude),

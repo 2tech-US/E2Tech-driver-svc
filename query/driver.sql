@@ -21,7 +21,7 @@ SELECT * FROM driver
 WHERE phone = $1 LIMIT 1;
 
 -- name: GetDriverNearby :many
-SELECT id, latitude, longitude, SQRT(
+SELECT phone, latitude, longitude, SQRT(
     POW(69.1 * (latitude - sqlc.arg(latitude)::float8), 2) +
     POW(69.1 * (sqlc.arg(longitude)::float8 - longitude) * COS(latitude / 57.3), 2))::float8 AS distance
 FROM driver HAVING distance < 25
