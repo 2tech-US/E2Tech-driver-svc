@@ -22,7 +22,6 @@ func (s *Server) CreateDriver(context context.Context, req *pb.CreateDriverReque
 
 	arg := db.CreateDriverParams{
 		Phone: req.Phone,
-		Name:  req.Name,
 	}
 
 	driver, err := s.DB.CreateDriver(context, arg)

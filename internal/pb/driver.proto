@@ -26,7 +26,6 @@ message Driver {
 
 message CreateDriverRequest {
   string phone = 1;
-  string name = 2;
 }
 
 message CreateDriverResponse {
