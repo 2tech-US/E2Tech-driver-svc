@@ -217,15 +217,13 @@ func (q *Queries) ListDrivers(ctx context.Context, arg ListDriversParams) ([]Dri
 const updateDriver = `-- name: UpdateDriver :one
 
 UPDATE driver
-SET phone = $2,
-  name = $3,
-  date_of_birth = $4
-WHERE id = $1
+SET name = $2,
+  date_of_birth = $3
+WHERE phone = $1
 RETURNING id, phone, name, date_of_birth, avatar_url, created_at, status, latitude, longitude
 `
 
 type UpdateDriverParams struct {
-	ID          int64        `json:"id"`
 	Phone       string       `json:"phone"`
 	Name        string       `json:"name"`
 	DateOfBirth sql.NullTime `json:"date_of_birth"`
@@ -233,12 +231,7 @@ type UpdateDriverParams struct {
 
 // pagination: offset: skip many rows
 func (q *Queries) UpdateDriver(ctx context.Context, arg UpdateDriverParams) (Driver, error) {
-	row := q.db.QueryRowContext(ctx, updateDriver,
-		arg.ID,
-		arg.Phone,
-		arg.Name,
-		arg.DateOfBirth,
-	)
+	row := q.db.QueryRowContext(ctx, updateDriver, arg.Phone, arg.Name, arg.DateOfBirth)
 	var i Driver
 	err := row.Scan(
 		&i.ID,

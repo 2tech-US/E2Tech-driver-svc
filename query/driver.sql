@@ -36,10 +36,9 @@ OFFSET $2; -- pagination: offset: skip many rows
 
 -- name: UpdateDriver :one
 UPDATE driver
-SET phone = $2,
-  name = $3,
-  date_of_birth = $4
-WHERE id = $1
+SET name = $2,
+  date_of_birth = $3
+WHERE phone = $1
 RETURNING *;
 
 -- name: UpdateLocation :one

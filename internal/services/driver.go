@@ -154,7 +154,6 @@ func (s *Server) UpdateDriver(context context.Context, req *pb.UpdateDriverReque
 	}
 
 	arg := db.UpdateDriverParams{
-		ID:          req.Id,
 		Phone:       req.Phone,
 		Name:        req.Name,
 		DateOfBirth: sqlDate,
