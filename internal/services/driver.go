@@ -38,6 +38,9 @@ func (s *Server) CreateDriver(context context.Context, req *pb.CreateDriverReque
 		Phone:       driver.Phone,
 		Name:        driver.Name,
 		DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
+		AvatarUrl:   utils.StringFromNull(driver.AvatarUrl),
+		Status:      driver.Status,
+		CreatedAt:   utils.ParsedDateToString(driver.CreatedAt),
 	}
 
 	return &pb.CreateDriverResponse{
@@ -67,6 +70,9 @@ func (s *Server) GetDriverByPhone(context context.Context, req *pb.GetDriverByPh
 		Phone:       driver.Phone,
 		Name:        driver.Name,
 		DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
+		AvatarUrl:   utils.StringFromNull(driver.AvatarUrl),
+		Status:      driver.Status,
+		CreatedAt:   utils.ParsedDateToString(driver.CreatedAt),
 	}
 
 	return &pb.GetDriverByPhoneResponse{
@@ -119,6 +125,9 @@ func (s *Server) ListDrivers(context context.Context, req *pb.ListDriversRequest
 			Phone:       driver.Phone,
 			Name:        driver.Name,
 			DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
+			AvatarUrl:   utils.StringFromNull(driver.AvatarUrl),
+			Status:      driver.Status,
+			CreatedAt:   utils.ParsedDateToString(driver.CreatedAt),
 		}
 	}
 
@@ -172,6 +181,9 @@ func (s *Server) UpdateDriver(context context.Context, req *pb.UpdateDriverReque
 		Phone:       driver.Phone,
 		Name:        driver.Name,
 		DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
+		AvatarUrl:   utils.StringFromNull(driver.AvatarUrl),
+		Status:      driver.Status,
+		CreatedAt:   utils.ParsedDateToString(driver.CreatedAt),
 	}
 
 	return &pb.UpdateDriverResponse{

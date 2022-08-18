@@ -23,3 +23,18 @@ func Float64FromNull(n sql.NullFloat64) float64 {
 
 	return n.Float64
 }
+
+func NullString(s string) sql.NullString {
+	return sql.NullString{
+		String: s,
+		Valid:  true,
+	}
+}
+
+func StringFromNull(n sql.NullString) string {
+	if !n.Valid {
+		return ""
+	}
+
+	return n.String
+}

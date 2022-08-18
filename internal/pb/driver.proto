@@ -21,7 +21,10 @@ message Driver {
   int64 id = 1;
   string phone = 2;
   string name = 3;
-  string date_of_birth = 5;
+  string date_of_birth = 4;
+  string avatar_url = 5;
+  string status = 6;
+  string created_at = 7;
 }
 
 message CreateDriverRequest {
