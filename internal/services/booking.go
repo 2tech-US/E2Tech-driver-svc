@@ -7,6 +7,7 @@ import (
 
 	"github.com/lntvan166/e2tech-driver-svc/internal/db"
 	"github.com/lntvan166/e2tech-driver-svc/internal/pb"
+	"github.com/lntvan166/e2tech-driver-svc/internal/utils"
 )
 
 func (s *Server) GetDriverNearby(ctx context.Context, req *pb.GetDriverNearbyRequest) (*pb.GetDriverNearbyResponse, error) {
@@ -29,8 +30,8 @@ func (s *Server) GetDriverNearby(ctx context.Context, req *pb.GetDriverNearbyReq
 		dataRsp = append(dataRsp, &pb.DriverNearby{
 			DriverId:  driver.ID,
 			Distance:  driver.Distance,
-			Latitude:  driver.Latitude,
-			Longitude: driver.Longitude,
+			Latitude:  utils.Float64FromNull(driver.Latitude),
+			Longitude: utils.Float64FromNull(driver.Longitude),
 		})
 	}
 

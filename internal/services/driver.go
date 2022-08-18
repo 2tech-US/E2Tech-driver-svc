@@ -22,6 +22,7 @@ func (s *Server) CreateDriver(context context.Context, req *pb.CreateDriverReque
 
 	arg := db.CreateDriverParams{
 		Phone: req.Phone,
+		Name:  req.Name,
 	}
 
 	driver, err := s.DB.CreateDriver(context, arg)
@@ -92,8 +93,8 @@ func (s *Server) GetLocation(context context.Context, req *pb.GetLocationRequest
 
 	return &pb.GetLocationResponse{
 		Status:    http.StatusOK,
-		Longitude: driver.Longitude,
-		Latitude:  driver.Latitude,
+		Longitude: utils.Float64FromNull(driver.Longitude),
+		Latitude:  utils.Float64FromNull(driver.Latitude),
 	}, nil
 }
 
@@ -227,8 +228,8 @@ func (s *Server) UpdateLocation(context context.Context, req *pb.UpdateLocationR
 
 	arg := db.UpdateLocationParams{
 		Phone:     req.Phone,
-		Latitude:  req.Latitude,
-		Longitude: req.Longitude,
+		Latitude:  utils.NullFloat64(req.Latitude),
+		Longitude: utils.NullFloat64(req.Longitude),
 	}
 
 	_, err = s.DB.UpdateLocation(context, arg)

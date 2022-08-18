@@ -135,10 +135,10 @@ type GetDriverNearbyParams struct {
 }
 
 type GetDriverNearbyRow struct {
-	ID        int64   `json:"id"`
-	Latitude  float64 `json:"latitude"`
-	Longitude float64 `json:"longitude"`
-	Distance  float64 `json:"distance"`
+	ID        int64           `json:"id"`
+	Latitude  sql.NullFloat64 `json:"latitude"`
+	Longitude sql.NullFloat64 `json:"longitude"`
+	Distance  float64         `json:"distance"`
 }
 
 func (q *Queries) GetDriverNearby(ctx context.Context, arg GetDriverNearbyParams) ([]GetDriverNearbyRow, error) {
@@ -263,9 +263,9 @@ RETURNING id, phone, name, date_of_birth, avatar_url, created_at, status, latitu
 `
 
 type UpdateLocationParams struct {
-	Phone     string  `json:"phone"`
-	Latitude  float64 `json:"latitude"`
-	Longitude float64 `json:"longitude"`
+	Phone     string          `json:"phone"`
+	Latitude  sql.NullFloat64 `json:"latitude"`
+	Longitude sql.NullFloat64 `json:"longitude"`
 }
 
 func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) (Driver, error) {
