@@ -7,10 +7,12 @@ option go_package = "./internal/pb";
 service DriverService {
   rpc CreateDriver(CreateDriverRequest) returns (CreateDriverResponse) {}
   rpc GetDriverByPhone(GetDriverByPhoneRequest) returns (GetDriverByPhoneResponse) {}
+  rpc GetDriverNearby(GetDriverNearbyRequest) returns (GetDriverNearbyResponse) {}
+  rpc GetLocation(GetLocationRequest) returns (GetLocationResponse) {}
   rpc ListDrivers(ListDriversRequest) returns (ListDriversResponse) {}
   rpc UpdateDriver(UpdateDriverRequest) returns (UpdateDriverResponse) {}
-  rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse) {}
-  rpc VerifyDriver(VerifyDriverRequest) returns (VerifyDriverResponse) {}
+  rpc UpdateLocation(UpdateLocationRequest) returns (UpdateLocationResponse) {}
+  rpc UpdateStatus(UpdateStatusRequest) returns (UpdateStatusResponse) {}
   rpc DeleteDriver(DeleteDriverRequest) returns (DeleteDriverResponse) {}
 
 }
@@ -19,14 +21,12 @@ message Driver {
   int64 id = 1;
   string phone = 2;
   string name = 3;
-  bool verified = 4;
-  string dateOfBirth = 5;
+  string date_of_birth = 5;
 }
 
 message CreateDriverRequest {
   string phone = 1;
-  string password = 2;
-  string name = 3;
+  string name = 2;
 }
 
 message CreateDriverResponse {
@@ -43,6 +43,36 @@ message GetDriverByPhoneResponse {
   int64 status = 1;
   string error = 2;
   Driver driver = 3;
+}
+
+message GetDriverNearbyRequest {
+  double latitude = 1;
+  double longitude = 2;
+  int32 number_of_drivers = 3;
+}
+
+message DriverNearby {
+  int64 driver_id = 1;
+  double distance = 2;
+  double latitude = 3;
+  double longitude = 4;
+}
+
+message GetDriverNearbyResponse {
+  int64 status = 1;
+  string error = 2;
+  repeated DriverNearby drivers = 3;
+}
+
+message GetLocationRequest {
+  string phone = 1;
+}
+
+message GetLocationResponse {
+  int64 status = 1;
+  string error = 2;
+  double latitude = 3;
+  double longitude = 4;
 }
 
 message ListDriversRequest {
@@ -63,7 +93,7 @@ message UpdateDriverRequest {
   int64 id = 1;
   string phone = 2;
   string name = 3;
-  string dateOfBirth = 4;
+  string date_of_birth = 4;
 }
 
 message UpdateDriverResponse {
@@ -72,25 +102,25 @@ message UpdateDriverResponse {
   Driver driver = 3;
 }
 
-message UpdatePasswordRequest {
+message UpdateLocationRequest {
   string phone = 1;
-  string password = 2;
+  double latitude = 2;
+  double longitude = 3;
 }
 
-message UpdatePasswordResponse {
+message UpdateLocationResponse {
   int64 status = 1;
   string error = 2;
-  Driver driver = 3;
 }
 
-message VerifyDriverRequest {
+message UpdateStatusRequest {
   string phone = 1;
+  string status = 2;
 }
 
-message VerifyDriverResponse {
+message UpdateStatusResponse {
   int64 status = 1;
   string error = 2;
-  Driver driver = 3;
 }
 
 message DeleteDriverRequest {

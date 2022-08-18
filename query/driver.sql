@@ -1,10 +1,9 @@
 -- name: CreateDriver :one
 INSERT INTO driver (
   phone,
-  hashed_password,
   name
 ) VALUES (
-  $1, $2, $3
+  $1, $2
 )
 RETURNING *;
 
@@ -21,6 +20,14 @@ FOR NO KEY UPDATE;
 SELECT * FROM driver
 WHERE phone = $1 LIMIT 1;
 
+-- name: GetDriverNearby :many
+SELECT id, latitude, longitude, SQRT(
+    POW(69.1 * (latitude - sqlc.arg(latitude)::float8), 2) +
+    POW(69.1 * (sqlc.arg(longitude)::float8 - longitude) * COS(latitude / 57.3), 2))::float8 AS distance
+FROM driver HAVING distance < 25
+AND status = 'finding'
+ORDER BY distance LIMIT $1;
+
 -- name: ListDrivers :many
 SELECT * FROM driver
 ORDER BY id
@@ -35,10 +42,17 @@ SET phone = $2,
 WHERE id = $1
 RETURNING *;
 
--- name: UpdatePassword :one
+-- name: UpdateLocation :one
 UPDATE driver
-SET hashed_password = $2
-WHERE id = $1
+SET latitude = $2,
+  longitude = $3
+WHERE phone = $1
+RETURNING *;
+
+-- name: UpdateStatus :one
+UPDATE driver
+SET status = $2
+WHERE phone = $1
 RETURNING *;
 
 -- name: Verify :one

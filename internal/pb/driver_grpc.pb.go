@@ -24,10 +24,12 @@ const _ = grpc.SupportPackageIsVersion7
 type DriverServiceClient interface {
 	CreateDriver(ctx context.Context, in *CreateDriverRequest, opts ...grpc.CallOption) (*CreateDriverResponse, error)
 	GetDriverByPhone(ctx context.Context, in *GetDriverByPhoneRequest, opts ...grpc.CallOption) (*GetDriverByPhoneResponse, error)
+	GetDriverNearby(ctx context.Context, in *GetDriverNearbyRequest, opts ...grpc.CallOption) (*GetDriverNearbyResponse, error)
+	GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error)
 	ListDrivers(ctx context.Context, in *ListDriversRequest, opts ...grpc.CallOption) (*ListDriversResponse, error)
 	UpdateDriver(ctx context.Context, in *UpdateDriverRequest, opts ...grpc.CallOption) (*UpdateDriverResponse, error)
-	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error)
-	VerifyDriver(ctx context.Context, in *VerifyDriverRequest, opts ...grpc.CallOption) (*VerifyDriverResponse, error)
+	UpdateLocation(ctx context.Context, in *UpdateLocationRequest, opts ...grpc.CallOption) (*UpdateLocationResponse, error)
+	UpdateStatus(ctx context.Context, in *UpdateStatusRequest, opts ...grpc.CallOption) (*UpdateStatusResponse, error)
 	DeleteDriver(ctx context.Context, in *DeleteDriverRequest, opts ...grpc.CallOption) (*DeleteDriverResponse, error)
 }
 
@@ -57,6 +59,24 @@ func (c *driverServiceClient) GetDriverByPhone(ctx context.Context, in *GetDrive
 	return out, nil
 }
 
+func (c *driverServiceClient) GetDriverNearby(ctx context.Context, in *GetDriverNearbyRequest, opts ...grpc.CallOption) (*GetDriverNearbyResponse, error) {
+	out := new(GetDriverNearbyResponse)
+	err := c.cc.Invoke(ctx, "/driver.DriverService/GetDriverNearby", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *driverServiceClient) GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error) {
+	out := new(GetLocationResponse)
+	err := c.cc.Invoke(ctx, "/driver.DriverService/GetLocation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *driverServiceClient) ListDrivers(ctx context.Context, in *ListDriversRequest, opts ...grpc.CallOption) (*ListDriversResponse, error) {
 	out := new(ListDriversResponse)
 	err := c.cc.Invoke(ctx, "/driver.DriverService/ListDrivers", in, out, opts...)
@@ -75,18 +95,18 @@ func (c *driverServiceClient) UpdateDriver(ctx context.Context, in *UpdateDriver
 	return out, nil
 }
 
-func (c *driverServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error) {
-	out := new(UpdatePasswordResponse)
-	err := c.cc.Invoke(ctx, "/driver.DriverService/UpdatePassword", in, out, opts...)
+func (c *driverServiceClient) UpdateLocation(ctx context.Context, in *UpdateLocationRequest, opts ...grpc.CallOption) (*UpdateLocationResponse, error) {
+	out := new(UpdateLocationResponse)
+	err := c.cc.Invoke(ctx, "/driver.DriverService/UpdateLocation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *driverServiceClient) VerifyDriver(ctx context.Context, in *VerifyDriverRequest, opts ...grpc.CallOption) (*VerifyDriverResponse, error) {
-	out := new(VerifyDriverResponse)
-	err := c.cc.Invoke(ctx, "/driver.DriverService/VerifyDriver", in, out, opts...)
+func (c *driverServiceClient) UpdateStatus(ctx context.Context, in *UpdateStatusRequest, opts ...grpc.CallOption) (*UpdateStatusResponse, error) {
+	out := new(UpdateStatusResponse)
+	err := c.cc.Invoke(ctx, "/driver.DriverService/UpdateStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,10 +128,12 @@ func (c *driverServiceClient) DeleteDriver(ctx context.Context, in *DeleteDriver
 type DriverServiceServer interface {
 	CreateDriver(context.Context, *CreateDriverRequest) (*CreateDriverResponse, error)
 	GetDriverByPhone(context.Context, *GetDriverByPhoneRequest) (*GetDriverByPhoneResponse, error)
+	GetDriverNearby(context.Context, *GetDriverNearbyRequest) (*GetDriverNearbyResponse, error)
+	GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error)
 	ListDrivers(context.Context, *ListDriversRequest) (*ListDriversResponse, error)
 	UpdateDriver(context.Context, *UpdateDriverRequest) (*UpdateDriverResponse, error)
-	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
-	VerifyDriver(context.Context, *VerifyDriverRequest) (*VerifyDriverResponse, error)
+	UpdateLocation(context.Context, *UpdateLocationRequest) (*UpdateLocationResponse, error)
+	UpdateStatus(context.Context, *UpdateStatusRequest) (*UpdateStatusResponse, error)
 	DeleteDriver(context.Context, *DeleteDriverRequest) (*DeleteDriverResponse, error)
 	mustEmbedUnimplementedDriverServiceServer()
 }
@@ -126,17 +148,23 @@ func (UnimplementedDriverServiceServer) CreateDriver(context.Context, *CreateDri
 func (UnimplementedDriverServiceServer) GetDriverByPhone(context.Context, *GetDriverByPhoneRequest) (*GetDriverByPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDriverByPhone not implemented")
 }
+func (UnimplementedDriverServiceServer) GetDriverNearby(context.Context, *GetDriverNearbyRequest) (*GetDriverNearbyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDriverNearby not implemented")
+}
+func (UnimplementedDriverServiceServer) GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLocation not implemented")
+}
 func (UnimplementedDriverServiceServer) ListDrivers(context.Context, *ListDriversRequest) (*ListDriversResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDrivers not implemented")
 }
 func (UnimplementedDriverServiceServer) UpdateDriver(context.Context, *UpdateDriverRequest) (*UpdateDriverResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDriver not implemented")
 }
-func (UnimplementedDriverServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
+func (UnimplementedDriverServiceServer) UpdateLocation(context.Context, *UpdateLocationRequest) (*UpdateLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateLocation not implemented")
 }
-func (UnimplementedDriverServiceServer) VerifyDriver(context.Context, *VerifyDriverRequest) (*VerifyDriverResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VerifyDriver not implemented")
+func (UnimplementedDriverServiceServer) UpdateStatus(context.Context, *UpdateStatusRequest) (*UpdateStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateStatus not implemented")
 }
 func (UnimplementedDriverServiceServer) DeleteDriver(context.Context, *DeleteDriverRequest) (*DeleteDriverResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDriver not implemented")
@@ -190,6 +218,42 @@ func _DriverService_GetDriverByPhone_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DriverService_GetDriverNearby_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDriverNearbyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DriverServiceServer).GetDriverNearby(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/driver.DriverService/GetDriverNearby",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DriverServiceServer).GetDriverNearby(ctx, req.(*GetDriverNearbyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DriverService_GetLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DriverServiceServer).GetLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/driver.DriverService/GetLocation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DriverServiceServer).GetLocation(ctx, req.(*GetLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _DriverService_ListDrivers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListDriversRequest)
 	if err := dec(in); err != nil {
@@ -226,38 +290,38 @@ func _DriverService_UpdateDriver_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DriverService_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePasswordRequest)
+func _DriverService_UpdateLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateLocationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DriverServiceServer).UpdatePassword(ctx, in)
+		return srv.(DriverServiceServer).UpdateLocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/driver.DriverService/UpdatePassword",
+		FullMethod: "/driver.DriverService/UpdateLocation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DriverServiceServer).UpdatePassword(ctx, req.(*UpdatePasswordRequest))
+		return srv.(DriverServiceServer).UpdateLocation(ctx, req.(*UpdateLocationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DriverService_VerifyDriver_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(VerifyDriverRequest)
+func _DriverService_UpdateStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DriverServiceServer).VerifyDriver(ctx, in)
+		return srv.(DriverServiceServer).UpdateStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/driver.DriverService/VerifyDriver",
+		FullMethod: "/driver.DriverService/UpdateStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DriverServiceServer).VerifyDriver(ctx, req.(*VerifyDriverRequest))
+		return srv.(DriverServiceServer).UpdateStatus(ctx, req.(*UpdateStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -296,6 +360,14 @@ var DriverService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DriverService_GetDriverByPhone_Handler,
 		},
 		{
+			MethodName: "GetDriverNearby",
+			Handler:    _DriverService_GetDriverNearby_Handler,
+		},
+		{
+			MethodName: "GetLocation",
+			Handler:    _DriverService_GetLocation_Handler,
+		},
+		{
 			MethodName: "ListDrivers",
 			Handler:    _DriverService_ListDrivers_Handler,
 		},
@@ -304,12 +376,12 @@ var DriverService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DriverService_UpdateDriver_Handler,
 		},
 		{
-			MethodName: "UpdatePassword",
-			Handler:    _DriverService_UpdatePassword_Handler,
+			MethodName: "UpdateLocation",
+			Handler:    _DriverService_UpdateLocation_Handler,
 		},
 		{
-			MethodName: "VerifyDriver",
-			Handler:    _DriverService_VerifyDriver_Handler,
+			MethodName: "UpdateStatus",
+			Handler:    _DriverService_UpdateStatus_Handler,
 		},
 		{
 			MethodName: "DeleteDriver",

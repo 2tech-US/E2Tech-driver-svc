@@ -20,12 +20,9 @@ func (s *Server) CreateDriver(context context.Context, req *pb.CreateDriverReque
 		}, nil
 	}
 
-	hashedPassword := utils.HashPassword(req.Password)
-
 	arg := db.CreateDriverParams{
-		Phone:          req.Phone,
-		HashedPassword: hashedPassword,
-		Name:           req.Name,
+		Phone: req.Phone,
+		Name:  req.Name,
 	}
 
 	driver, err := s.DB.CreateDriver(context, arg)
@@ -40,7 +37,6 @@ func (s *Server) CreateDriver(context context.Context, req *pb.CreateDriverReque
 		Id:          driver.ID,
 		Phone:       driver.Phone,
 		Name:        driver.Name,
-		Verified:    driver.Verified,
 		DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
 	}
 
@@ -70,13 +66,35 @@ func (s *Server) GetDriverByPhone(context context.Context, req *pb.GetDriverByPh
 		Id:          driver.ID,
 		Phone:       driver.Phone,
 		Name:        driver.Name,
-		Verified:    driver.Verified,
 		DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
 	}
 
 	return &pb.GetDriverByPhoneResponse{
 		Status: http.StatusOK,
 		Driver: dataRsp,
+	}, nil
+}
+
+func (s *Server) GetLocation(context context.Context, req *pb.GetLocationRequest) (*pb.GetLocationResponse, error) {
+	driver, err := s.DB.GetDriverByPhone(context, req.Phone)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return &pb.GetLocationResponse{
+				Status: http.StatusBadRequest,
+				Error:  "user not found",
+			}, nil
+		}
+
+		return &pb.GetLocationResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "failed to get user",
+		}, nil
+	}
+
+	return &pb.GetLocationResponse{
+		Status:    http.StatusOK,
+		Longitude: driver.Longitude,
+		Latitude:  driver.Latitude,
 	}, nil
 }
 
@@ -100,7 +118,6 @@ func (s *Server) ListDrivers(context context.Context, req *pb.ListDriversRequest
 			Id:          driver.ID,
 			Phone:       driver.Phone,
 			Name:        driver.Name,
-			Verified:    driver.Verified,
 			DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
 		}
 	}
@@ -155,93 +172,10 @@ func (s *Server) UpdateDriver(context context.Context, req *pb.UpdateDriverReque
 		Id:          driver.ID,
 		Phone:       driver.Phone,
 		Name:        driver.Name,
-		Verified:    driver.Verified,
 		DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
 	}
 
 	return &pb.UpdateDriverResponse{
-		Status: http.StatusOK,
-		Driver: dataRsp,
-	}, nil
-}
-
-func (s *Server) UpdatePassword(context context.Context, req *pb.UpdatePasswordRequest) (*pb.UpdatePasswordResponse, error) {
-	driver, err := s.DB.GetDriverByPhone(context, req.Phone)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return &pb.UpdatePasswordResponse{
-				Status: http.StatusBadRequest,
-				Error:  "user not found",
-			}, nil
-		}
-
-		return &pb.UpdatePasswordResponse{
-			Status: http.StatusInternalServerError,
-			Error:  "failed to get user",
-		}, nil
-	}
-
-	hashedPassword := utils.HashPassword(req.Password)
-	arg := db.UpdatePasswordParams{
-		ID:             driver.ID,
-		HashedPassword: hashedPassword,
-	}
-
-	driver, err = s.DB.UpdatePassword(context, arg)
-	if err != nil {
-		return &pb.UpdatePasswordResponse{
-			Status: http.StatusInternalServerError,
-			Error:  "failed to update password",
-		}, nil
-	}
-
-	dataRsp := &pb.Driver{
-		Id:          driver.ID,
-		Phone:       driver.Phone,
-		Name:        driver.Name,
-		Verified:    driver.Verified,
-		DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
-	}
-
-	return &pb.UpdatePasswordResponse{
-		Status: http.StatusOK,
-		Driver: dataRsp,
-	}, nil
-}
-
-func (s *Server) VerifyDriver(context context.Context, req *pb.VerifyDriverRequest) (*pb.VerifyDriverResponse, error) {
-	driver, err := s.DB.GetDriverByPhone(context, req.Phone)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return &pb.VerifyDriverResponse{
-				Status: http.StatusBadRequest,
-				Error:  "user not found",
-			}, nil
-		}
-
-		return &pb.VerifyDriverResponse{
-			Status: http.StatusInternalServerError,
-			Error:  "failed to get user",
-		}, nil
-	}
-
-	driver, err = s.DB.Verify(context, req.Phone)
-	if err != nil {
-		return &pb.VerifyDriverResponse{
-			Status: http.StatusInternalServerError,
-			Error:  "failed to verify driver",
-		}, nil
-	}
-
-	dataRsp := &pb.Driver{
-		Id:          driver.ID,
-		Phone:       driver.Phone,
-		Name:        driver.Name,
-		Verified:    driver.Verified,
-		DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
-	}
-
-	return &pb.VerifyDriverResponse{
 		Status: http.StatusOK,
 		Driver: dataRsp,
 	}, nil
@@ -272,6 +206,75 @@ func (s *Server) DeleteDriver(context context.Context, req *pb.DeleteDriverReque
 	}
 
 	return &pb.DeleteDriverResponse{
+		Status: http.StatusOK,
+	}, nil
+}
+
+func (s *Server) UpdateLocation(context context.Context, req *pb.UpdateLocationRequest) (*pb.UpdateLocationResponse, error) {
+	_, err := s.DB.GetDriverByPhone(context, req.Phone)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return &pb.UpdateLocationResponse{
+				Status: http.StatusBadRequest,
+				Error:  "user not found",
+			}, nil
+		}
+
+		return &pb.UpdateLocationResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "failed to get user",
+		}, nil
+	}
+
+	arg := db.UpdateLocationParams{
+		Phone:     req.Phone,
+		Latitude:  req.Latitude,
+		Longitude: req.Longitude,
+	}
+
+	_, err = s.DB.UpdateLocation(context, arg)
+	if err != nil {
+		return &pb.UpdateLocationResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "failed to update location",
+		}, nil
+	}
+
+	return &pb.UpdateLocationResponse{
+		Status: http.StatusOK,
+	}, nil
+}
+
+func (s *Server) UpdateStatus(context context.Context, req *pb.UpdateStatusRequest) (*pb.UpdateStatusResponse, error) {
+	_, err := s.DB.GetDriverByPhone(context, req.Phone)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return &pb.UpdateStatusResponse{
+				Status: http.StatusBadRequest,
+				Error:  "driver: user not found",
+			}, nil
+		}
+
+		return &pb.UpdateStatusResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "driver: failed to get user",
+		}, nil
+	}
+
+	arg := db.UpdateStatusParams{
+		Phone:  req.Phone,
+		Status: req.Status,
+	}
+
+	_, err = s.DB.UpdateStatus(context, arg)
+	if err != nil {
+		return &pb.UpdateStatusResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "driver: failed to update status",
+		}, nil
+	}
+
+	return &pb.UpdateStatusResponse{
 		Status: http.StatusOK,
 	}, nil
 }
