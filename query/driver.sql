@@ -24,8 +24,10 @@ WHERE phone = $1 LIMIT 1;
 SELECT phone, latitude, longitude, SQRT(
     POW(69.1 * (latitude - sqlc.arg(latitude)::float8), 2) +
     POW(69.1 * (sqlc.arg(longitude)::float8 - longitude) * COS(latitude / 57.3), 2))::float8 AS distance
-FROM driver HAVING distance < 25
-AND status = 'finding'
+FROM driver 
+WHERE status = 'finding'
+AND latitude IS NOT NULL
+AND longitude IS NOT NULL
 ORDER BY distance LIMIT $1;
 
 -- name: ListDrivers :many

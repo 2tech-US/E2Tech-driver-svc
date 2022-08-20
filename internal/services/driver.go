@@ -127,6 +127,8 @@ func (s *Server) ListDrivers(context context.Context, req *pb.ListDriversRequest
 			DateOfBirth: utils.ParsedDateToString(driver.DateOfBirth.Time),
 			AvatarUrl:   utils.StringFromNull(driver.AvatarUrl),
 			Status:      driver.Status,
+			Latitude:    utils.Float64FromNull(driver.Latitude),
+			Longitude:   utils.Float64FromNull(driver.Longitude),
 			CreatedAt:   utils.ParsedDateToString(driver.CreatedAt),
 		}
 	}

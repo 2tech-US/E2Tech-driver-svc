@@ -24,7 +24,9 @@ message Driver {
   string date_of_birth = 4;
   string avatar_url = 5;
   string status = 6;
-  string created_at = 7;
+  double latitude = 7;
+  double longitude = 8;
+  string created_at = 9;
 }
 
 message CreateDriverRequest {

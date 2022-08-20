@@ -123,8 +123,10 @@ const getDriverNearby = `-- name: GetDriverNearby :many
 SELECT phone, latitude, longitude, SQRT(
     POW(69.1 * (latitude - $2::float8), 2) +
     POW(69.1 * ($3::float8 - longitude) * COS(latitude / 57.3), 2))::float8 AS distance
-FROM driver HAVING distance < 25
-AND status = 'finding'
+FROM driver 
+WHERE status = 'finding'
+AND latitude IS NOT NULL
+AND longitude IS NOT NULL
 ORDER BY distance LIMIT $1
 `
 
