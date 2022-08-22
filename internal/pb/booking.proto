@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+package passenger;
+
+option go_package = "./internal/pb";
+
+service BookingService {
+  rpc ListHistory(ListHistoryRequest) returns (ListHistoryResponse) {}
+  rpc SendRequest(SendRequestRequest) returns (SendRequestResponse) {}
+
+  // passenger
+  rpc CreateRequest(CreateRequestRequest) returns (CreateRequestResponse) {}
+  rpc CloseRequest(CloseRequestRequest) returns (CloseRequestResponse) {}
+  
+  rpc GetResponse(GetResponseRequest) returns (GetResponseResponse) {}
+  
+  // driver
+  rpc AcceptRequest(AcceptRequestRequest) returns (AcceptRequestResponse) {}
+  rpc RejectRequest(RejectRequestRequest) returns (RejectRequestResponse) {}
+  rpc GetRequest(GetRequestRequest) returns (GetRequestResponse) {}
+  rpc CompleteTrip(CompleteTripRequest) returns (CompleteTripResponse) {}
+  rpc UpdateResponse(UpdateResponseRequest) returns (UpdateResponseResponse) {}
+}
+
+message Location {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+message CreateRequestRequest {
+  string type = 1;
+  string phone = 2;
+  Location pick_up_location = 3;
+  Location drop_off_location = 4;
+}
+
+message CreateRequestResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message CloseRequestRequest {
+  string phone = 1;
+}
+
+message CloseRequestResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message DriverResponse {
+  string status = 1;
+  string name = 2;
+  Location location = 3;
+}
+
+message GetResponseRequest {
+  string phone = 1;
+}
+
+message GetResponseResponse {
+  int64 status = 1;
+  string error = 2;
+  DriverResponse driver = 3;
+}
+
+message History {
+  string type = 1;
+  string passenger_phone = 2;
+  string driver_phone = 3;
+  Location pick_up_location = 4;
+  Location drop_off_location = 5;
+  string created_at = 6;
+  string done_at = 7;
+}
+
+message ListHistoryRequest {
+  string passenger_phone = 1;
+}
+
+message ListHistoryResponse {
+  int64 status = 1;
+  string error = 2;
+  repeated History history = 3;
+}
+
+message SendRequestRequest {
+  string driver_phone = 1;
+  int64 request_id = 2;
+  string phone = 3;
+  Location pick_up_location = 4;
+  Location drop_off_location = 5;
+}
+
+message SendRequestResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message AcceptRequestRequest {
+  string driver_phone = 1;
+  string passenger_phone = 2;
+}
+
+message AcceptRequestResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message RejectRequestRequest {
+  string driver_phone = 1;
+  string passenger_phone = 2;
+}
+
+message RejectRequestResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message Request {
+  int64 id = 1;
+  string type = 2;
+  string phone = 3;
+  Location pick_up_location = 4;
+  Location drop_off_location = 5;
+  string created_at = 6;
+}
+
+message GetRequestRequest {
+  string passenger_phone = 1;
+}
+
+message GetRequestResponse {
+  int64 status = 1;
+  string error = 2;
+  Request request = 3;
+}
+
+message CompleteTripRequest {
+  string driver_phone = 1;
+  string passenger_phone = 2;
+}
+
+message CompleteTripResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message UpdateResponseRequest {
+  string driver_phone = 1;
+  double latitude = 2;
+  double longitude = 3;
+}
+
+message UpdateResponseResponse {
+  int64 status = 1;
+  string error = 2;
+}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/lntvan166/e2tech-driver-svc/internal/client"
 	"github.com/lntvan166/e2tech-driver-svc/internal/db"
 	"github.com/lntvan166/e2tech-driver-svc/internal/pb"
 	"github.com/lntvan166/e2tech-driver-svc/internal/utils"
@@ -250,6 +251,24 @@ func (s *Server) UpdateLocation(context context.Context, req *pb.UpdateLocationR
 		return &pb.UpdateLocationResponse{
 			Status: http.StatusInternalServerError,
 			Error:  "failed to update location",
+		}, nil
+	}
+
+	res, err := s.BookingSvc.UpdateResponse(context, &client.UpdateResponseRequest{
+		DriverPhone: req.Phone,
+		Latitude:    req.Latitude,
+		Longitude:   req.Longitude,
+	})
+	if err != nil {
+		return &pb.UpdateLocationResponse{
+			Status: http.StatusInternalServerError,
+			Error:  "failed to update location",
+		}, nil
+	}
+	if res.Status != http.StatusOK && res.Status != http.StatusNotFound {
+		return &pb.UpdateLocationResponse{
+			Status: res.Status,
+			Error:  fmt.Sprintf("failed to update location: %s", res.Error),
 		}, nil
 	}
 
